@@ -1,20 +1,19 @@
 import React from "react";
-import classes from "./Toolbar.css";
 import Logo from "../../Logo/Logo";
 import NavigationItems from "../NavigationItems/NavigationItems";
+import classes from "./SideDrawer.css";
 
-const toolbar = (props) => {
+const sideDrawer = (props) => {
   return (
-    <header className={classes.Toolbar}>
-      <div>MENU</div>
+    <div className={classes.SideDrawer}>
       <div className={classes.Logo}>
         <Logo />
       </div>
       <nav>
         <NavigationItems />
       </nav>
-    </header>
+    </div>
   );
 };
 
-export default toolbar;
+export default sideDrawer;
