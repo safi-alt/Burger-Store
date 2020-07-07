@@ -19,6 +19,7 @@ class ContactData extends Component {
           required: true,
         },
         valid: false,
+        touched: false,
       },
 
       street: {
@@ -32,6 +33,7 @@ class ContactData extends Component {
           required: true,
         },
         valid: false,
+        touched: false,
       },
       zipCode: {
         elementType: "input",
@@ -46,6 +48,7 @@ class ContactData extends Component {
           maxLength: 5,
         },
         valid: false,
+        touched: false,
       },
       country: {
         elementType: "input",
@@ -58,6 +61,7 @@ class ContactData extends Component {
           required: true,
         },
         valid: false,
+        touched: false,
       },
 
       email: {
@@ -71,6 +75,7 @@ class ContactData extends Component {
           required: true,
         },
         valid: false,
+        touched: false,
       },
 
       deliveryMethod: {
@@ -82,9 +87,11 @@ class ContactData extends Component {
           ],
         },
         value: "",
+        valid: true,
       },
     },
     loading: false,
+    formIsValid: false,
   };
 
   orderHandler = (event) => {
@@ -140,9 +147,16 @@ class ContactData extends Component {
       updatedFormElement.value,
       updatedFormElement.validation
     );
+    updatedFormElement.touched = true;
     updatedOrderForm[inputIdentifier] = updatedFormElement;
-    console.log(updatedFormElement);
-    this.setState({ orderForm: updatedOrderForm });
+
+    let formIsValid = true;
+
+    for (let inputIdentifiers in updatedOrderForm) {
+      formIsValid = updatedOrderForm[inputIdentifiers].valid && formIsValid;
+    }
+
+    this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid });
   };
 
   render() {
@@ -163,10 +177,15 @@ class ContactData extends Component {
             value={formElement.config.value}
             invalid={!formElement.config.valid}
             shouldValidate={formElement.config.validation}
+            touched={formElement.config.touched}
             changed={(event) => this.inputChangedHandler(event, formElement.id)}
           />
         ))}
-        <Button btnType="Success" clicked={this.orderHandler}>
+        <Button
+          btnType="Success"
+          disabled={!this.state.formIsValid}
+          clicked={this.orderHandler}
+        >
           ORDER
         </Button>
       </form>
