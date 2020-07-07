@@ -14,6 +14,7 @@ class ContactData extends Component {
           type: "text",
           placeholder: "Your Name",
         },
+        value: "",
       },
 
       street: {
@@ -22,6 +23,7 @@ class ContactData extends Component {
           type: "text",
           placeholder: "Street",
         },
+        value: "",
       },
       zipCode: {
         elementType: "input",
@@ -29,6 +31,7 @@ class ContactData extends Component {
           type: "text",
           placeholder: "ZIP Code",
         },
+        value: "",
       },
       country: {
         elementType: "input",
@@ -36,6 +39,7 @@ class ContactData extends Component {
           type: "text",
           placeholder: "Country",
         },
+        value: "",
       },
 
       email: {
@@ -44,6 +48,7 @@ class ContactData extends Component {
           type: "email",
           placeholder: "Your E-Mail",
         },
+        value: "",
       },
 
       deliveryMethod: {
@@ -54,6 +59,7 @@ class ContactData extends Component {
             { value: "cheapest", displayValue: "Cheapest" },
           ],
         },
+        value: "",
       },
     },
     loading: false,
@@ -80,27 +86,23 @@ class ContactData extends Component {
   };
 
   render() {
+    const formElementsArray = [];
+    for (let key in this.state.orderForm) {
+      formElementsArray.push({
+        id: key,
+        config: this.state.orderForm[key],
+      });
+    }
     let form = (
       <form>
-        <Input elementType="..." elementConfig="..." value="..." />
-        <Input
-          inputtype="input"
-          type="email"
-          name="email"
-          placeholder="Your Mail"
-        />
-        <Input
-          inputtype="input"
-          type="text"
-          name="street"
-          placeholder="Street"
-        />
-        <Input
-          inputtype="input"
-          type="text"
-          name="postal"
-          placeholder="Postal Code"
-        />
+        {formElementsArray.map((formElement) => (
+          <Input
+            key={formElement.id}
+            elementType={formElement.config.elementType}
+            elementConfig={formElement.config.elementConfig}
+            value={formElement.config.value}
+          />
+        ))}
         <Button btnType="Success" clicked={this.orderHandler}>
           ORDER
         </Button>
