@@ -14,19 +14,10 @@ import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 class BurgerBuilder extends Component {
   state = {
     purchasing: false,
-    loading: false,
-    error: false,
   };
+
   componentDidMount() {
     console.log(this.props);
-    axios
-      .get("https://react-my-burger-8990f.firebaseio.com/ingredients.json")
-      .then((response) => {
-        this.setState({ ingredients: response.data });
-      })
-      .catch((error) => {
-        this.setState({ error: true });
-      });
   }
 
   updatePurchaseState(ingredients) {
@@ -87,9 +78,6 @@ class BurgerBuilder extends Component {
           price={this.props.price}
         />
       );
-    }
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
     }
 
     return (
