@@ -1,6 +1,6 @@
 import * as actionTypes from "../actions/actionTypes";
 
-initialState = {
+const initialState = {
   orders: [],
   loading: false,
 };
@@ -33,3 +33,4 @@ const reducer = (state = initialState, action) => {
       return state;
   }
 };
+export default reducer;
