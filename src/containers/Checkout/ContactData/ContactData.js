@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as actions from "../../../store/actions/index";
+
 import Button from "../../../components/UI/Button/Button";
+import Spinner from "../../../components/UI/Spinner/Spinner";
 import classes from "./ContactData.css";
 import axios from "../../../axios-orders";
-import Spinner from "../../../components/UI/Spinner/Spinner";
 import Input from "../../../components/UI/Input/Input";
 import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
+import * as actions from "../../../store/actions/index";
 
 class ContactData extends Component {
   state = {
@@ -24,7 +25,6 @@ class ContactData extends Component {
         valid: false,
         touched: false,
       },
-
       street: {
         elementType: "input",
         elementConfig: {
@@ -49,6 +49,7 @@ class ContactData extends Component {
           required: true,
           minLength: 5,
           maxLength: 5,
+          isNumeric: true,
         },
         valid: false,
         touched: false,
@@ -66,7 +67,6 @@ class ContactData extends Component {
         valid: false,
         touched: false,
       },
-
       email: {
         elementType: "input",
         elementConfig: {
@@ -76,11 +76,11 @@ class ContactData extends Component {
         value: "",
         validation: {
           required: true,
+          isEmail: true,
         },
         valid: false,
         touched: false,
       },
-
       deliveryMethod: {
         elementType: "select",
         elementConfig: {
@@ -89,12 +89,11 @@ class ContactData extends Component {
             { value: "cheapest", displayValue: "Cheapest" },
           ],
         },
-        validation: {},
         value: "fastest",
+        validation: {},
         valid: true,
       },
     },
-
     formIsValid: false,
   };
 
@@ -107,7 +106,6 @@ class ContactData extends Component {
         formElementIdentifier
       ].value;
     }
-
     const order = {
       ingredients: this.props.ings,
       price: this.props.price,
@@ -119,7 +117,6 @@ class ContactData extends Component {
 
   checkValidity(value, rules) {
     let isValid = true;
-
     if (!rules) {
       return true;
     }
@@ -127,19 +124,35 @@ class ContactData extends Component {
     if (rules.required) {
       isValid = value.trim() !== "" && isValid;
     }
+
     if (rules.minLength) {
       isValid = value.length >= rules.minLength && isValid;
     }
+
     if (rules.maxLength) {
       isValid = value.length <= rules.maxLength && isValid;
+    }
+
+    if (rules.isEmail) {
+      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+      isValid = pattern.test(value) && isValid;
+    }
+
+    if (rules.isNumeric) {
+      const pattern = /^\d+$/;
+      isValid = pattern.test(value) && isValid;
     }
 
     return isValid;
   }
 
   inputChangedHandler = (event, inputIdentifier) => {
-    const updatedOrderForm = { ...this.state.orderForm };
-    const updatedFormElement = { ...updatedOrderForm[inputIdentifier] };
+    const updatedOrderForm = {
+      ...this.state.orderForm,
+    };
+    const updatedFormElement = {
+      ...updatedOrderForm[inputIdentifier],
+    };
     updatedFormElement.value = event.target.value;
     updatedFormElement.valid = this.checkValidity(
       updatedFormElement.value,
@@ -149,11 +162,9 @@ class ContactData extends Component {
     updatedOrderForm[inputIdentifier] = updatedFormElement;
 
     let formIsValid = true;
-
-    for (let inputIdentifiers in updatedOrderForm) {
-      formIsValid = updatedOrderForm[inputIdentifiers].valid && formIsValid;
+    for (let inputIdentifier in updatedOrderForm) {
+      formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
     }
-
     this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid });
   };
 
@@ -179,11 +190,7 @@ class ContactData extends Component {
             changed={(event) => this.inputChangedHandler(event, formElement.id)}
           />
         ))}
-        <Button
-          btnType="Success"
-          disabled={!this.state.formIsValid}
-          clicked={this.orderHandler}
-        >
+        <Button btnType="Success" disabled={!this.state.formIsValid}>
           ORDER
         </Button>
       </form>
