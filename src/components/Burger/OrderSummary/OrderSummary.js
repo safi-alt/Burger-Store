@@ -5,9 +5,6 @@ import Button from "../../UI/Button/Button";
 
 class OrderSummary extends Component {
   // This could be a functional component because it is now improved in performance by the modal componenet but it is remained a class component because as refrence
-  componentWillUpdate() {
-    console.log("[OrderSummary] WillUpdate");
-  }
 
   render() {
     const ingredientSummary = Object.keys(this.props.ingredients).map(
