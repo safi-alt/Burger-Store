@@ -49,7 +49,7 @@ export const fetchOrdersFail = (error) => {
   };
 };
 
-export const fetchOrdersStart = () => {
+export const fetchOrdersStart = (orders) => {
   return {
     type: actionTypes.FETCH_ORDERS_START,
   };
